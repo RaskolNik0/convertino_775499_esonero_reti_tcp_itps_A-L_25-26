@@ -40,6 +40,14 @@ int main(int argc, char *argv[]) {
 
 	const char* citta_ammesse[NUM_CITTA] = {"bari", "roma", "milano", "napoli", "torino", "palermo", "genova", "bologna", "firenze", "venezia"};
 
+	int port = SERVER_PORT;
+
+	for(int i=1; i<argc; i++){
+		if(strcmp(argv[i], "-p") == 0 && i+1 < argc){
+			port = atoi(argv[++i]);
+	    }
+	}
+
 #if defined WIN32
 	// Initialize Winsock
 	WSADATA wsa_data;
@@ -63,8 +71,8 @@ int main(int argc, char *argv[]) {
 	// TODO: Configure server address
 	struct sockaddr_in server_addr;
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = htons(SERVER_PORT);
-	server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	server_addr.sin_port = htons(port);
+	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	// TODO: Bind socket
 	if(bind(my_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) < 0){
